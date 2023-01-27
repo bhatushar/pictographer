@@ -74,4 +74,10 @@ Libarary root
     |   |   |   | - EDT-20230116-000.png
     |   |   |   | - IMG-20230116-000.jpg
     |   |   |   | - VID-20230116-000.mp4
+    |   |   | - 21 - Family Trip
+    |   |   |   | - EDT-20230121-000.png
+    |   |   |   | - IMG-20230121-000.jpg
+    |   |   |   | - VID-20230121-000.mp4
 ```
+
+Some of the keywords can be used as folder labels. In the example above, the directory `2023/01 - January/21 - Family Trip` contains at least one media file with keyword "Family Trip" which is marked as a folder label. If more than one folder label keywords are present within a folder, then a prirority system is used to pick one of them.
