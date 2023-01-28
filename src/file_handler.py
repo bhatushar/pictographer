@@ -103,5 +103,6 @@ def move(metadata: pd.DataFrame, lib_root: str, folder_labels: list[str]):
         os.renames(old_path, new_path)
         print(old_path, "->", new_path)
     print()
+    metadata.drop("NewLocation", inplace=True)
     # Remove old directories
     _remove_empty_dirs(lib_root)
