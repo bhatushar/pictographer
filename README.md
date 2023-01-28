@@ -81,3 +81,17 @@ Libarary root
 ```
 
 Some of the keywords can be used as folder labels. In the example above, the directory `2023/01 - January/21 - Family Trip` contains at least one media file with keyword "Family Trip" which is marked as a folder label. If more than one folder label keywords are present within a folder, then a prirority system is used to pick one of them.
+
+## Usage
+
+Generate CSV for exif data:
+
+```
+.\scripts\export-exif.ps1 "path/to/library"
+```
+
+Organize library and generate metadata CSV:
+
+```
+python .\scr\main.py "path/to/library"
+```
