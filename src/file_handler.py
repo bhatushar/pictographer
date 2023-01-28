@@ -1,4 +1,5 @@
 import helpers
+import math
 import os
 import pandas as pd
 
@@ -48,3 +49,59 @@ def rename(metadata: pd.DataFrame, lib_root: str):
         print(old_path, "->", new_path)
     print()
     metadata["FileName"] = df["NewFileName"]
+
+
+##################################################################################################################
+
+
+def _location_with_label(metadata: pd.DataFrame, folder_labels: list[str]) -> pd.Series:
+    """Return list of directories following the library structure including folder labels"""
+    df_groups = []
+    # Split dataframe by date on which media was created
+    date_groups = metadata.groupby(lambda index: metadata["Datetime"].loc[index].strftime("%Y/%m - %B/%d"))
+    for group_id, sub_df in date_groups:
+        folder_label = None
+        label_priority = math.inf
+        # Check all keywords present under a particular Day
+        # Record the folder label with highest priority
+        # Priority is determined by label's index in "folder_labels" (0 being highest)
+        keywords = "; ".join(sub_df["Keywords"])
+        for keyword in set(keywords.split("; ")):
+            if keyword in folder_labels and folder_labels.index(keyword) < label_priority:
+                folder_label = keyword
+                label_priority = folder_labels.index(keyword)
+        # group_id is of the "format 2023/01 - January/16"
+        new_location = f"{group_id} - {folder_label}" if folder_label else group_id
+        sub_df["NewLocation"] = new_location
+        df_groups.append(sub_df)
+    # Combine groups into whole with "NewLocation" column, sorted on original order
+    metadata = pd.concat(df_groups).sort_index()
+    return metadata["NewLocation"]
+
+
+def _remove_empty_dirs(root_dir: str):
+    """Recursively delete empty directories under root_dir, including root_dir"""
+    for dirpath, _, _ in os.walk(root_dir, topdown=False):
+        try:
+            os.rmdir(dirpath)
+            print("Deleting empty directory:", dirpath)
+        except OSError:
+            # Directory is not empty, do nothing
+            pass
+    print()
+
+
+def move(metadata: pd.DataFrame, lib_root: str, folder_labels: list[str]):
+    metadata["NewLocation"] = _location_with_label(metadata, folder_labels)
+    print("Creating directories:")
+    print(*metadata["NewLocation"].unique(), sep="\n")
+    print()  # Just an empty line, keep moving :D
+    print("Moving files:")
+    for _, row in metadata.iterrows():
+        old_path = os.path.join(lib_root, row["Location"], row["FileName"])
+        new_path = os.path.join(lib_root, row["NewLocation"], row["FileName"])
+        os.renames(old_path, new_path)
+        print(old_path, "->", new_path)
+    print()
+    # Remove old directories
+    _remove_empty_dirs(lib_root)
