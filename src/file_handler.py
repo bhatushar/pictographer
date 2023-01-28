@@ -1,6 +1,7 @@
 import helpers
 import math
 import os
+import numpy as np
 import pandas as pd
 
 
@@ -16,7 +17,7 @@ def _media_type(row: pd.Series) -> str:
 
 
 def _filename(row: pd.Series) -> str:
-    sequence = f"{row.name:03}"
+    sequence = f"{row['Sequence']:03}"
     extension = row['FileName'].rsplit('.', 1)[1]
     return f"{row['MediaType']}-{row['Date']}-{sequence}.{extension}"
 
@@ -28,27 +29,26 @@ def _gen_new_filenames(df: pd.DataFrame) -> pd.DataFrame:
     # Split dataframe on media type and date, generate new names for each group, and combine all groups
     df_groups: list[pd.DataFrame] = []
     for _, sub_df in df.groupby(["MediaType", "Date"]):
-        sub_df = sub_df.reset_index(drop=True)
+        sub_df["Sequence"] = np.arange(len(sub_df.index))
         sub_df["NewFileName"] = sub_df.apply(_filename, axis=1)
         df_groups.append(sub_df)
-    updated_metadata = pd.concat(df_groups, ignore_index=True)
+    updated_metadata = pd.concat(df_groups).sort_index()
     # Remove additionally created columns
-    return updated_metadata.drop(["MediaType", "Date"], axis=1)
+    return updated_metadata.drop(["MediaType", "Date", "Sequence"], axis=1)
 
 
 def rename(metadata: pd.DataFrame, lib_root: str):
     """Rename files in disk as per TAG-YYYYMMDD-XXX format and update the metadata accordingly"""
-    # If two files have same datetime, sequence is maintained based on filename
-    df = metadata.sort_values(by=["FileName"])
-    df = _gen_new_filenames(df)
+    local_df = metadata
+    local_df = _gen_new_filenames(local_df)
     print("Renaming files:")
-    for _, (old_name, new_name, location) in df[["FileName", "NewFileName", "Location"]].iterrows():
+    for _, (old_name, new_name, location) in local_df[["FileName", "NewFileName", "Location"]].iterrows():
         old_path = os.path.join(lib_root, location, old_name)
         new_path = os.path.join(lib_root, location, new_name)
         os.rename(old_path, new_path)
         print(old_path, "->", new_path)
     print()
-    metadata["FileName"] = df["NewFileName"]
+    metadata["FileName"] = local_df["NewFileName"]
 
 
 ##################################################################################################################
