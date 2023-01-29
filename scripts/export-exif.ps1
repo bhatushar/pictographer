@@ -11,4 +11,4 @@ Get-Content .env | ForEach-Object {
 # XpKeywords are photo tags (Separated by semi-colon)
 # Category are video tags (Separated by comma)
 
-& $Env:Exiftool_Path -n -r -csv > $Env:Raw_Metadata_Path -FileName -DateTimeOriginal -TrackCreateDate -XpKeywords -Category -Title -GPSLatitude -GPSLatitudeRef -GPSLongitude -GPSLongitudeRef "$($args[0])"
+& $Env:Exiftool_Path -n -r -csv > $Env:Raw_Metadata_Path -FileName -DateTimeOriginal -TrackCreateDate -OffsetTimeOriginal -XpKeywords -Category -Title -GPSLatitude -GPSLatitudeRef -GPSLongitude -GPSLongitudeRef "$($args[0])"

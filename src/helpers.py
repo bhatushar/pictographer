@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import pytz
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 # Given a datetime string and timezone, method adds timezone offset to datetime string
@@ -16,7 +16,12 @@ def add_utc_offset(df_row):
         return np.nan
     dt = datetime.strptime(df_row["TrackCreateDate"], "%Y:%m:%d %H:%M:%S")
     # Convert Timezone offset to timedelta
-    td = pytz.timezone(df_row["Timezone"]).localize(dt).utcoffset()
+    # Offset formats: +05:30, 00:00, -04:00
+    hrs, mins = map(int, df_row["OffsetTimeOriginal"].split(":"))
+    if hrs < 0:
+        # Offset is east of UCT, make mins negative
+        mins = -mins
+    td = timedelta(hours=hrs, minutes=mins)
     dt: datetime = dt + td
     return dt.strftime("%Y:%m:%d %H:%M:%S")
 

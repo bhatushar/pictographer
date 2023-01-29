@@ -50,7 +50,7 @@ def sanitized_df(md_csv_path: str, library_root: str) -> pd.DataFrame:
             "FileName",
             "Location",
             "Datetime",
-            "Timezone",
+            "OffsetTimeOriginal",
             "Keywords",
             "Title",
             "GPSLatitude",
@@ -60,7 +60,7 @@ def sanitized_df(md_csv_path: str, library_root: str) -> pd.DataFrame:
     ])
 
     # Copy columns
-    for field in ["FileName", "Title", "Timezone", "GPSLatitude", "GPSLongitude"]:
+    for field in ["FileName", "Title", "OffsetTimeOriginal", "GPSLatitude", "GPSLongitude"]:
         md[field] = raw_md[field]
     # Copy file location after removing library root prefix and filename
     md["Location"] = raw_md["SourceFile"].str.lstrip(library_root)
