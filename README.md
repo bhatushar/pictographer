@@ -12,6 +12,7 @@ Collection of scripts to help me organize my photo library with the help of Exif
 - FileName
 - DateTimeOriginal (For photos, format: yyyy:mm:dd hh:mm:ss)
 - TrackCreateDate (For videos, format: yyyy:mm:dd hh:mm:ss)
+- OffsetTimeOriginal
 - XPKeywords (Keywords for photos)
 - Category (Keywords for videos)
 - Title
@@ -20,11 +21,10 @@ Collection of scripts to help me organize my photo library with the help of Exif
 - GPSLongitude
 - GPSLongitudeRef
 
-**Step 2:** Add Timezone column to the CSV file, eg. "Asia/Kolkata".
-
-**Step 2.1:** Verify the data in the generated CSV. This includes:
+**Step 2:** Verify the data in the generated CSV. This includes:
 
 - Ensuring DateTimeOriginal and TrackCreateDate are defined for all media.
+- OffsetTimeOriginal is defined for all media. It's the UTC offset of the origin of photo. Format: +05:30
 - XPKeywords are not missing. Sometimes only the Subject property is updated.
 - Both GPSLatitude and GPSLongitude are defined for relevant files.
 - GPSLatitudeRef and GPSLongitudeRef are defined if GPSLatitude and GPSLongitude are defined.
@@ -34,6 +34,7 @@ Collection of scripts to help me organize my photo library with the help of Exif
 - FileName
 - Location (Directory path of file relative to libaray root)
 - Datetime (Format: yyyy-mm-dd hh:mm:ss)
+- OffsetTimeOriginal
 - Keywords (Format: kw1; kw2; kw3)
 - Title
 - GPSLatitude
