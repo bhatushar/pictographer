@@ -34,6 +34,7 @@ def _gen_new_filenames(df: pd.DataFrame) -> pd.DataFrame:
         df_groups.append(sub_df)
     updated_metadata = pd.concat(df_groups).sort_index()
     # Remove additionally created columns
+    df.drop(["MediaType", "Date"], axis=1, inplace=True)
     return updated_metadata.drop(["MediaType", "Date", "Sequence"], axis=1)
 
 
