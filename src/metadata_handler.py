@@ -59,6 +59,20 @@ def sanitized_df(md_csv_path: str, library_root: str) -> pd.DataFrame:
             "GPSLongitudeRef",
     ])
 
+    # Depending of the media, following columns may not be present
+    # Add empty columns
+    optional_cols = [
+        "DateTimeOriginal", # Only videos in media
+        "TrackCreateDate",  # Only images in media
+        "XPKeywords",       # No keywords or only videos
+        "Category",         # No keywords or only images
+        "Title",            # No title in any media
+    ]
+    for col in optional_cols:
+        if col not in raw_md.columns:
+            raw_md[col] = ""
+
+
     # Copy columns
     for field in ["FileName", "Title", "OffsetTimeOriginal", "GPSLatitude", "GPSLongitude"]:
         md[field] = raw_md[field]
