@@ -77,7 +77,7 @@ def sanitized_df(md_csv_path: str, library_root: str) -> pd.DataFrame:
     for field in ["FileName", "Title", "OffsetTimeOriginal", "GPSLatitude", "GPSLongitude"]:
         md[field] = raw_md[field]
     # Copy file location after removing library root prefix and filename
-    md["Location"] = raw_md["SourceFile"].str.lstrip(library_root)
+    md["Location"] = raw_md["SourceFile"].apply(lambda full_path: os.path.relpath(full_path, library_root))
     md["Location"] = md["Location"].apply(lambda filepath: os.path.dirname(filepath))
     # Copy formatted fields
     md["Keywords"] = _extract_keywords(raw_md)
