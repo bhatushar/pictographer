@@ -84,4 +84,6 @@ def sanitized_df(md_csv_path: str, library_root: str) -> pd.DataFrame:
     md["Datetime"] = _extract_datetime(raw_md)
     md["GPSLatitudeRef"] = _extract_gpsref(raw_md, "GPSLatitude", "N", "S")
     md["GPSLongitudeRef"] = _extract_gpsref(raw_md, "GPSLongitude", "E", "W")
-    return md
+
+    # Maintain relative order of files by datetime
+    return md.sort_values(by="Datetime", ignore_index=True)
