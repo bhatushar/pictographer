@@ -37,7 +37,7 @@ def check_unkown_files(md_csv_path: str) -> list[str]:
     """Returns list of files with extensions that are not recognized as image or video"""
     md = pd.read_csv(md_csv_path)
     media_types = tuple(helpers.img_types | helpers.vid_types)
-    known_file_filter = md["SourceFile"].str.endswith(media_types)
+    known_file_filter = md["SourceFile"].str.lower().str.endswith(media_types)
     unknown_files = md.loc[~known_file_filter, "SourceFile"]
     return unknown_files.to_list()
 

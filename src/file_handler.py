@@ -10,7 +10,7 @@ def _media_type(row: pd.Series) -> str:
     if "Edit" in row["Keywords"].split("; "):
         # Edit has higer priority over image and video
         return "EDT"
-    elif row["FileName"].endswith(tuple(helpers.img_types)):
+    elif row["FileName"].lower().endswith(tuple(helpers.img_types)):
         return "IMG"
     else:
         return "VID"
