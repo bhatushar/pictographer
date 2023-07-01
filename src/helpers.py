@@ -1,7 +1,7 @@
+from datetime import datetime, timedelta
+
 import numpy as np
 import pandas as pd
-import pytz
-from datetime import datetime, timedelta
 
 
 # Given a datetime string and timezone, method adds timezone offset to datetime string
@@ -27,4 +27,4 @@ def add_utc_offset(df_row):
 
 
 img_types = {".jpg", ".jpeg", ".png", ".heic", ".cr2", ".nef"}
-vid_types = {".mp4", ".mkv", ".avi", ".mov", ".m4a"}
+vid_types = {".mp4", ".mkv", ".avi", ".mov", ".m4v"}
